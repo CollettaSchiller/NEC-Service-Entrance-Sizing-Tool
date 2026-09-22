@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEC Dwelling Service Entrance Sizer</title>
+<style>
+:root{--bg:#f5f7fa;--card:#fff;--ink:#15202b;--muted:#5b6773;--line:#d9e0e7;--accent:#0b6e4f;--accent2:#e8f5ef;--warn:#fff3cd;--warnline:#f0c36d;--danger:#ffe7e7;--dangerline:#d9534f;}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{max-width:1180px;margin:auto;padding:24px}.hero{margin-bottom:18px}.hero h1{margin:0 0 6px;font-size:30px}.hero p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(20,30,40,.04)}
+h2{font-size:20px;margin:0 0 12px}.sub{color:var(--muted);font-size:13px;margin-top:-6px;margin-bottom:14px}
+.row{display:grid;grid-template-columns:1fr 180px;gap:10px;align-items:center;margin:9px 0}.row3{display:grid;grid-template-columns:1fr 120px 120px;gap:10px;align-items:center;margin:9px 0}.row4{display:grid;grid-template-columns:1.2fr 110px 110px 100px;gap:8px;align-items:center;margin:9px 0}
+label{font-weight:600}.help{display:block;font-size:12px;color:var(--muted);font-weight:400} input,select,button{font:inherit}input,select{width:100%;padding:9px 10px;border:1px solid #cbd5df;border-radius:8px;background:#fff}button{border:0;border-radius:9px;padding:9px 13px;cursor:pointer;font-weight:700}.primary{background:var(--accent);color:#fff}.secondary{background:#eef2f6;color:#1e2a34}.danger{background:var(--danger);color:#7a201d}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.note{padding:11px 12px;border:1px solid var(--warnline);background:var(--warn);border-radius:9px;font-size:13px;margin:12px 0}.error{padding:11px 12px;border:1px solid var(--dangerline);background:var(--danger);border-radius:9px;color:#7a201d;margin:12px 0}
+.results{position:sticky;top:12px}.big{font-size:36px;font-weight:800;color:var(--accent);line-height:1.1}.metric{padding:12px;background:#fafcfd;border:1px solid var(--line);border-radius:10px;margin:9px 0}.metric b{font-size:18px}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:600px){.two,.row,.row3,.row4{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:700}.right{text-align:right}.muted{color:var(--muted)}.ok{color:var(--accent)}.small{font-size:12px;color:var(--muted)}
+.appliance{border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0}.appliance-grid{display:grid;grid-template-columns:1.3fr 110px 95px 95px 1fr;gap:8px;align-items:end}@media(max-width:700px){.appliance-grid{grid-template-columns:1fr 1fr}.appliance-grid button{grid-column:1/-1}}
+footer{margin-top:18px;color:var(--muted);font-size:12px}.ref{background:#f7faf8;border:1px solid #d9e8df;border-radius:9px;padding:10px;margin-top:9px}
+</style>
+</head>
+<body>
+<main>
+  <div class="hero">
+    <h1>NEC Dwelling Service Entrance Sizer</h1>
+    <p>Single-phase 120/240 V dwelling service — standard load-calculation method, phase balancing, service conductors, neutral, grounding electrode conductor, equipment grounding conductor and main OCPD.</p>
+  </div>
+  <div class="grid">
+    <section>
+      <div class="card">
+        <h2>1. Code basis & dwelling</h2>
+        <div class="row"><label>NEC edition<select id="edition"><option value="2026">2026 NEC</option><option value="2023">2023 NEC</option></select></label><span></span></div>
+        <div class="row"><label>Dwelling floor area (ft²)<span class="help">Use the area applicable to the dwelling-unit load calculation.</span></label><input id="area" type="number" min="0" step="1" value="2000"></div>
+        <div class="row"><label>Small-appliance branch circuits<span class="help">Minimum 2 for a dwelling unit.</span></label><input id="smallCircuits" type="number" min="2" step="1" value="2"></div>
+        <div class="row"><label>Laundry branch circuits<span class="help">Minimum 1 where the dwelling has laundry facilities.</span></label><input id="laundryCircuits" type="number" min="0" step="1" value="1"></div>
+        <div class="row"><label>Service voltage</label><select id="voltage"><option value="240">120/240 V</option></select></div>
+        <div class="row"><label>Service conductor material</label><select id="phaseMat"><option value="Cu">Copper</option><option value="Al">Aluminum / CCA</option></select></div>
+        <div class="row"><label>Neutral material</label><select id="neutralMat"><option value="Cu">Copper</option><option value="Al">Aluminum / CCA</option></select></div>
+        <div class="row"><label>Grounding electrode conductor (GEC) material</label><select id="gecMat"><option value="Cu">Copper</option><option value="Al">Aluminum / CCA</option></select></div>
+        <div class="row"><label>Grounding electrode type<select id="electrode"><option value="mixed">Water pipe / steel / multiple electrodes</option><option value="rod">Rod / pipe / plate only</option><option value="ufer">Concrete-encased electrode only</option></select></label><span></span></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>2. Heating, cooling and motors</h2>
+        <div class="sub">Enter the electrical load that is actually present. For motors, enter the motor load once; do not also enter that same motor as a separate fixed appliance.</div>
+        <div class="row"><label>Electric space heating (VA)<span class="help">Standard method uses the connected heating load.</span></label><input id="heat" type="number" min="0" step="1" value="0"></div>
+        <div class="row"><label>Air-conditioning / cooling (VA)<span class="help">Use the applicable calculated A/C load for the service calculation.</span></label><input id="cool" type="number" min="0" step="1" value="0"></div>
+        <div class="row"><label>Largest motor load (VA)<span class="help">Adds 25% of the largest motor under the motor-load rules.</span></label><input id="motor" type="number" min="0" step="1" value="0"></div>
+        <div class="row"><label>EVSE / EV charger (VA)<span class="help">2026: use nameplate, or 7,200 VA where the applicable provision requires the minimum. 2023: enter the calculated EVSE load.</span></label><input id="evse" type="number" min="0" step="1" value="0"></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>3. Fixed & special appliances</h2>
+        <div class="sub">Ranges/cooking appliances and dryers get their own NEC demand treatment. Other permanently connected appliances can receive the 75% demand factor when four or more qualify.</div>
+        <div id="appliances"></div>
+        <div class="actions"><button class="secondary" id="addFixed">+ Fixed appliance</button><button class="secondary" id="addRange">+ Range / oven / cooktop</button><button class="secondary" id="addDryer">+ Dryer</button></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>4. 120 V phase assignment</h2>
+        <div class="sub">For 120 V fixed loads, choose phase A or B. 240 V line-to-line loads do not add current to the neutral. The lighting/small-appliance/laundry demand is assumed split as evenly as possible for the phase-balance illustration.</div>
+        <div id="phaseLoads"></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>Notes & limitations</h2>
+        <div class="note">This calculator is designed for a single-phase 120/240 V dwelling service or the entire load of a dwelling unit. Local amendments, utility requirements, service-entrance installation conditions, conductor temperature ratings, terminal ratings, raceway fill, ambient temperature, voltage drop, fault-current withstand, equipment listings, and AHJ requirements can change the final field selection.</div>
+        <div class="small">The calculator reports a minimum code-based sizing result; it does not certify an installation, permit, utility service, or engineered design.</div>
+      </div>
+    </section>
+
+    <aside class="results">
+      <div class="card">
+        <h2>Results</h2>
+        <div class="metric"><div class="small">Calculated service load</div><div class="big" id="calcAmps">—</div><div class="small" id="calcVa">—</div></div>
+        <div class="two">
+          <div class="metric"><div class="small">Minimum main OCPD</div><b id="mainSize">—</b></div>
+          <div class="metric"><div class="small">120 V phase balance</div><b id="phaseSummary">—</b></div>
+        </div>
+        <div class="metric"><div class="small">Service entrance ungrounded conductors</div><b id="phaseSize">—</b><div class="small" id="phaseAmpacity">—</div></div>
+        <div class="metric"><div class="small">Neutral / grounded conductor</div><b id="neutralSize">—</b><div class="small" id="neutralDetail">—</div></div>
+        <div class="metric"><div class="small">Grounding electrode conductor (GEC)</div><b id="gecSize">—</b><div class="small" id="gecDetail">—</div></div>
+        <div class="metric"><div class="small">Equipment grounding conductor (EGC)</div><b id="egcSize">—</b><div class="small">Sized from NEC Table 250.122 by main OCPD.</div></div>
+        <div id="warnings"></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>Calculation breakdown</h2>
+        <table id="breakdown"><thead><tr><th>Item</th><th class="right">Connected / demand</th><th class="right">VA</th></tr></thead><tbody></tbody></table>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>Code references</h2>
+        <div class="ref" id="refs"></div>
+      </div>
+    </aside>
+  </div>
+  <footer>Built as a browser-only calculator. No information is uploaded; calculations run locally in your browser.</footer>
+</main>
+<script>
+const tables={
+  conductor:[
+    {a:100,cu:'4 AWG',al:'2 AWG'},{a:110,cu:'3 AWG',al:'1 AWG'},{a:125,cu:'2 AWG',al:'1/0 AWG'},{a:150,cu:'1 AWG',al:'2/0 AWG'},{a:175,cu:'1/0 AWG',al:'3/0 AWG'},{a:200,cu:'2/0 AWG',al:'4/0 AWG'},{a:225,cu:'3/0 AWG',al:'250 kcmil'},{a:250,cu:'4/0 AWG',al:'300 kcmil'},{a:300,cu:'250 kcmil',al:'350 kcmil'},{a:350,cu:'350 kcmil',al:'500 kcmil'},{a:400,cu:'400 kcmil',al:'600 kcmil'}],
+  egc:[{a:15,cu:'14 AWG',al:'12 AWG'},{a:20,cu:'12 AWG',al:'10 AWG'},{a:60,cu:'10 AWG',al:'8 AWG'},{a:100,cu:'8 AWG',al:'6 AWG'},{a:200,cu:'6 AWG',al:'4 AWG'},{a:300,cu:'4 AWG',al:'2 AWG'},{a:400,cu:'3 AWG',al:'1 AWG'},{a:500,cu:'2 AWG',al:'1/0 AWG'},{a:600,cu:'1 AWG',al:'2/0 AWG'},{a:800,cu:'1/0 AWG',al:'3/0 AWG'},{a:1000,cu:'2/0 AWG',al:'4/0 AWG'},{a:1200,cu:'3/0 AWG',al:'250 kcmil'}],
+  gec:[{cuMax:66.4,alMax:105.6,cuGec:'8 AWG',alGec:'6 AWG'},{cuMax:105.6,alMax:167.8,cuGec:'6 AWG',alGec:'4 AWG'},{cuMax:167.8,alMax:250,cuGec:'4 AWG',alGec:'2 AWG'},{cuMax:350,alMax:500,cuGec:'2 AWG',alGec:'1/0 AWG'},{cuMax:600,alMax:900,cuGec:'1/0 AWG',alGec:'3/0 AWG'},{cuMax:1100,alMax:1750,cuGec:'2/0 AWG',alGec:'4/0 AWG'},{cuMax:1e9,alMax:1e9,cuGec:'3/0 AWG',alGec:'250 kcmil'}],
+  neutral:[{cuMax:66.4,alMax:105.6,cuN:'8 AWG',alN:'6 AWG'},{cuMax:105.6,alMax:167.8,cuN:'6 AWG',alN:'4 AWG'},{cuMax:167.8,alMax:250,cuN:'4 AWG',alN:'2 AWG'},{cuMax:350,alMax:500,cuN:'2 AWG',alN:'1/0 AWG'},{cuMax:600,alMax:900,cuN:'1/0 AWG',alN:'3/0 AWG'},{cuMax:1100,alMax:1750,cuN:'2/0 AWG',alN:'4/0 AWG'}]
+};
+const cmils={'14 AWG':4110,'12 AWG':6530,'10 AWG':10380,'8 AWG':16510,'6 AWG':26240,'4 AWG':41740,'3 AWG':52620,'2 AWG':66360,'1 AWG':83690,'1/0 AWG':105600,'2/0 AWG':133100,'3/0 AWG':167800,'4/0 AWG':211600,'250 kcmil':250000,'300 kcmil':300000,'350 kcmil':350000,'400 kcmil':400000,'500 kcmil':500000,'600 kcmil':600000};
+const amp75Cu={'14 AWG':20,'12 AWG':25,'10 AWG':35,'8 AWG':50,'6 AWG':65,'4 AWG':85,'3 AWG':100,'2 AWG':115,'1 AWG':130,'1/0 AWG':150,'2/0 AWG':175,'3/0 AWG':200,'4/0 AWG':230,'250 kcmil':255,'300 kcmil':285,'350 kcmil':310,'400 kcmil':335,'500 kcmil':380,'600 kcmil':420};
+const amp75Al={'14 AWG':15,'12 AWG':20,'10 AWG':30,'8 AWG':40,'6 AWG':50,'4 AWG':65,'3 AWG':75,'2 AWG':90,'1 AWG':100,'1/0 AWG':120,'2/0 AWG':135,'3/0 AWG':155,'4/0 AWG':180,'250 kcmil':205,'300 kcmil':230,'350 kcmil':250,'400 kcmil':270,'500 kcmil':310,'600 kcmil':340};
+const stdBreakers=[100,110,125,150,175,200,225,250,300,350,400];
+let appId=0;
+function addAppliance(kind='fixed',name='',va=0,voltage=240,phase='A'){
+  const id=++appId; const div=document.createElement('div'); div.className='appliance'; div.dataset.id=id; div.dataset.kind=kind;
+  div.innerHTML=`<div class="appliance-grid"><div><label>Name<input class="aname" value="${name}"></label></div><div><label>VA<input class="ava" type="number" min="0" step="1" value="${va}"></label></div><div><label>Voltage<select class="avolt"><option value="120" ${voltage==120?'selected':''}>120</option><option value="240" ${voltage==240?'selected':''}>240</option></select></label></div><div><label>Phase<select class="aphase"><option value="A" ${phase==='A'?'selected':''}>A</option><option value="B" ${phase==='B'?'selected':''}>B</option></select></label></div><div><label>Category<select class="akind"><option value="fixed" ${kind==='fixed'?'selected':''}>Fixed appliance</option><option value="range" ${kind==='range'?'selected':''}>Range / cooking</option><option value="dryer" ${kind==='dryer'?'selected':''}>Dryer</option></select></label></div><button class="danger remove">Remove</button></div>`;
+  document.getElementById('appliances').appendChild(div);
+  div.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',calculate)); div.querySelector('.remove').onclick=()=>{div.remove();calculate()};
+  calculate();
+}
+function num(id){return Math.max(0,Number(document.getElementById(id).value)||0)}
+function demandLighting(va){ if(va<=3000)return va; if(va<=120000)return 3000+(va-3000)*.35; return 3000+117000*.35+(va-120000)*.25; }
+function tableDryerFactor(n,edition){
+  if(n<=0)return 0; if(edition==='2023'){const rows=[[4,1],[5,.85],[6,.75],[7,.65],[8,.60],[9,.55],[10,.50],[11,.47],[12,.45],[13,.43],[14,.41],[15,.40],[16,.39],[17,.38],[18,.37],[19,.36],[20,.35],[21,.34],[22,.33],[23,.32],[24,.31],[25,.30],[30,.30],[40,.22],[50,.20],[60,.18],[Infinity,.16]]; return rows.find(r=>n<=r[0])[1];}
+  const rows=[[2,1],[5,.80],[6,.75],[7,.65],[8,.60],[9,.55],[10,.50],[11,.47],[12,.45],[13,.43],[14,.41],[15,.40],[16,.39],[17,.38],[18,.37],[19,.36],[20,.35],[21,.34],[22,.33],[23,.32],[24,.31],[25,.30],[30,.30],[40,.22],[50,.20],[60,.18],[Infinity,.16]]; return rows.find(r=>n<=r[0])[1];
+}
+function rangeDemand(ratings){
+  const n=ratings.length;if(!n)return 0;
+  if(n>=6&&n<=40){let kw=15+n;return kw*1000;}
+  if(n>=26&&n<=30)return (15+n)*1000;
+  if(n>=41&&n<=50)return (25+.75*n)*1000;
+  if(n>=51&&n<=60)return 25*1000; if(n>=61)return 25*1000;
+  // Column C for 1-25 ranges; rating treatment for >12 kW is applied below for one dwelling / unequal ratings.
+  const col=[0,8,11,14,17,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40];
+  let base=col[Math.min(n,25)]*1000;
+  if(n===1 && ratings[0]>12000) base*=1+0.05*Math.ceil((ratings[0]-12000)/1000);
+  else if(n>1 && ratings.some(v=>v>8750)){
+    const avg=ratings.reduce((s,v)=>s+Math.max(v,12000),0)/n;
+    if(avg>12000) base*=1+0.05*Math.ceil((avg-12000)/1000);
+  }
+  return base;
+}
+function condSize(rating,mat){ const x=tables.conductor.find(r=>r.a>=rating)||tables.conductor.at(-1); return x[mat==='Cu'?'cu':'al']; }
+function egcSize(rating,mat){ const x=tables.egc.find(r=>r.a>=rating)||tables.egc.at(-1); return x[mat==='Cu'?'cu':'al']; }
+function standardBreaker(a){ return stdBreakers.find(v=>v>=Math.ceil(a))||400; }
+function gecSize(serviceConductor,mat,elec){
+  const cm=cmils[serviceConductor]||0;
+  let row=tables.gec.find(r=>cm <= (mat==='Cu'?r.cuMax*1000:r.alMax*1000));
+  let s=row ? row[mat==='Cu'?'cuGec':'alGec'] : (mat==='Cu'?'3/0 AWG':'250 kcmil');
+  if(mat==='Cu'&&elec==='rod' && cm>0){ if(cm<=cmils['2/0 AWG']||true)s='6 AWG'; }
+  if(mat==='Cu'&&elec==='ufer' && cm>0){ if((cmils[s]||0)>cmils['4 AWG']) s='4 AWG'; }
+  if(mat==='Al'&&elec==='rod')s='4 AWG';
+  return s;
+}
+function minimumNeutralFloor(serviceConductor,mat){
+  const cm=cmils[serviceConductor]||0; const rows=tables.neutral;
+  for(const r of rows){ if(cm <= (mat==='Cu'?r.cuMax*1000:r.alMax*1000)) return r[mat==='Cu'?'cuN':'alN']; }
+  const need=cm*.125; const sizes=Object.entries(cmils).sort((a,b)=>a[1]-b[1]); return (sizes.find(x=>x[1]>=need)||sizes.at(-1))[0];
+}
+function collectApps(){return [...document.querySelectorAll('.appliance')].map(d=>({name:d.querySelector('.aname').value.trim()||'Unnamed appliance',va:numEl(d.querySelector('.ava')),voltage:Number(d.querySelector('.avolt').value),phase:d.querySelector('.aphase').value,kind:d.querySelector('.akind').value}));}
+function numEl(e){return Math.max(0,Number(e.value)||0)}
+function set(id,v){document.getElementById(id).textContent=v}
+function calculate(){
+  const edition=document.getElementById('edition').value, area=num('area'), sa=Math.max(2,Math.floor(num('smallCircuits'))), laundry=Math.floor(num('laundryCircuits'));
+  const lightVA=area*(edition==='2026'?2:3), smallVA=sa*1500, laundryVA=laundry*1500, genConnected=lightVA+smallVA+laundryVA, genDemand=demandLighting(genConnected);
+  const apps=collectApps(), fixed=apps.filter(a=>a.kind==='fixed'), ranges=apps.filter(a=>a.kind==='range'), dryers=apps.filter(a=>a.kind==='dryer');
+  const fixedConnected=fixed.reduce((s,a)=>s+a.va,0), fixedDemand=fixed.length>=4?fixedConnected*.75:fixedConnected;
+  const rangeDemandVA=rangeDemand(ranges.map(a=>a.va));
+  const dryerConnected=dryers.reduce((s,a)=>s+Math.max(5000,a.va),0), dryerDemand=dryerConnected*tableDryerFactor(dryers.length,edition);
+  const heat=num('heat'), cool=num('cool'), largestHC=Math.max(heat,cool), motor=num('motor'), motorAdder=motor*.25;
+  let evse=num('evse'); if(edition==='2026'&&evse>0)evse=Math.max(evse,7200);
+  const totalVA=genDemand+fixedDemand+rangeDemandVA+dryerDemand+largestHC+motorAdder+evse;
+  const amps=totalVA/240, main=standardBreaker(amps);
+  const phaseConductor=condSize(main,document.getElementById('phaseMat').value);
+  const phaseMat=document.getElementById('phaseMat').value;
+  // Neutral: approximate calculated 120-V load after general-lighting demand plus 120-V fixed loads; range/dryer neutral allowance at 70%.
+  let base120=genDemand; let phaseA=genDemand/2, phaseB=genDemand/2;
+  const neutralItems=[];
+  apps.forEach(a=>{if(a.voltage===120){const va=a.va; if(a.kind==='range'||a.kind==='dryer'){neutralItems.push({phase:a.phase,va:va*.70,name:a.name+' neutral allowance'}); if(a.phase==='A')phaseA+=va*.70;else phaseB+=va*.70;}else{neutralItems.push({phase:a.phase,va,name:a.name}); if(a.phase==='A')phaseA+=va;else phaseB+=va;}}});
+  // 240V fixed loads do not contribute to neutral.
+  const phaseAmps=phaseA/120, phaseBAmps=phaseB/120; const unbalanceA=Math.max(phaseA-phaseB,0), unbalanceB=Math.max(phaseB-phaseA,0), neutralLoadVA=Math.max(unbalanceA,unbalanceB), neutralA=neutralLoadVA/120;
+  const neutralFloor=minimumNeutralFloor(phaseConductor,document.getElementById('neutralMat').value);
+  const neutralSizeByLoad=(()=>{const mat=document.getElementById('neutralMat').value; const a=mat==='Cu'?amp75Cu:amp75Al; const order=Object.entries(a).sort((x,y)=>x[1]-y[1]); return (order.find(x=>x[1]>=neutralA)||order.at(-1))[0];})();
+  // Use the larger of ampacity-based neutral and the grounded-conductor table floor.
+  const neutralSize=(()=>{const order=['14 AWG','12 AWG','10 AWG','8 AWG','6 AWG','4 AWG','3 AWG','2 AWG','1 AWG','1/0 AWG','2/0 AWG','3/0 AWG','4/0 AWG','250 kcmil','300 kcmil','350 kcmil','400 kcmil','500 kcmil','600 kcmil']; return order[Math.max(order.indexOf(neutralFloor),order.indexOf(neutralSizeByLoad))]||neutralFloor;})();
+  const gec=gecSize(phaseConductor,phaseMat,document.getElementById('electrode').value), egc=egcSize(main,document.getElementById('phaseMat').value);
+  set('calcAmps',amps.toFixed(1)+' A');set('calcVa',Math.round(totalVA).toLocaleString()+' VA calculated load');set('mainSize',main+' A, 2-pole');set('phaseSummary',phaseAmps.toFixed(1)+' A / '+phaseBAmps.toFixed(1)+' A');set('phaseSize',phaseConductor+' '+phaseMat);set('phaseAmpacity','NEC 310.12 dwelling-service conductor selection for the '+main+' A service rating.');set('neutralSize',neutralSize+' '+document.getElementById('neutralMat').value);set('neutralDetail','Calculated unbalance ≈ '+neutralA.toFixed(1)+' A; grounded-conductor table floor '+neutralFloor+'.');set('gecSize',gec+' '+document.getElementById('gecMat').value);set('gecDetail','NEC Table 250.66, with electrode-specific cap where applicable.');set('egcSize',egc+' '+phaseMat);
+  const w=[]; if(amps>400)w.push('Calculated load exceeds this tool’s 400 A dwelling-service table limit.'); if(num('smallCircuits')<2)w.push('At least two small-appliance branch circuits are required for the dwelling load calculation; the tool enforced 2.'); if(document.getElementById('electrode').value==='rod')w.push('The rod/pipe/plate cap is applied to the GEC connection portion; other electrode connections can require a larger conductor.'); if(phaseAmps>main)w.push('Phase A calculated current is above the selected main rating. Review phase allocation and load calculation.'); if(phaseBAmps>main)w.push('Phase B calculated current is above the selected main rating. Review phase allocation and load calculation.'); document.getElementById('warnings').innerHTML=w.map(x=>`<div class="error">${x}</div>`).join('');
+  const tb=document.querySelector('#breakdown tbody'); const rows=[['General lighting + SA + laundry',Math.round(genConnected).toLocaleString()+' connected',genDemand],['Fixed appliances',fixedConnected.toLocaleString()+' connected',fixedDemand],['Ranges / cooking',ranges.length?ranges.length+' unit(s)':'none',rangeDemandVA],['Clothes dryers',dryers.length?dryers.length+' unit(s)':'none',dryerDemand],['Heating / cooling',largestHC.toLocaleString()+' largest',largestHC],['Largest motor adder',motor?'25% of '+motor.toLocaleString():'none',motorAdder],['EVSE',evse?'100%':'none',evse],['TOTAL', '',totalVA]]; tb.innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="right">${r[1]}</td><td class="right">${Math.round(r[2]).toLocaleString()} VA</td></tr>`).join('');
+  const oldRef=edition==='2026'?'NEC 2026: Article 120 Part III standard load calculation; 120.41/120.42, 120.50–120.61, Table 120.54 and Table 120.55. Service disconnect/overcurrent and conductors: 230.42, 230.79, 240.6, 310.12. Grounding/grounded conductors: 250.24, 250.66, 250.102(C), 250.122.':'NEC 2023: Article 220 Part III standard load calculation; 220.41/220.42, 220.50–220.61, Table 220.54 and Table 220.55. Service disconnect/overcurrent and conductors: 230.42, 230.79, 240.6, 310.12. Grounding/grounded conductors: 250.24, 250.66, 250.102(C), 250.122.'; document.getElementById('refs').textContent=oldRef;
+}
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',calculate));
+document.getElementById('addFixed').onclick=()=>addAppliance('fixed','Dishwasher',1200,240,'A');
+document.getElementById('addRange').onclick=()=>addAppliance('range','Range',12000,240,'A');
+document.getElementById('addDryer').onclick=()=>addAppliance('dryer','Dryer',5000,240,'B');
+addAppliance('range','Range',12000,240,'A');addAppliance('dryer','Dryer',5000,240,'B');addAppliance('fixed','Water heater',4500,240,'A');addAppliance('fixed','Dishwasher',1200,120,'A');addAppliance('fixed','Disposal',800,120,'B');
+calculate();
+</script>
+</body>
+</html>
